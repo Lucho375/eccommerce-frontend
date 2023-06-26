@@ -28,11 +28,18 @@ export default function Header() {
               </li>
             </>
           ) : (
-            <li>
-              <Link to="/login" className="text-white transition-colors duration-300 hover:text-gray-300">
-                Iniciar sesión
-              </Link>
-            </li>
+            <>
+              <li>
+                <Link to="/login" className="text-white transition-colors duration-300 hover:text-gray-300">
+                  Iniciar sesión
+                </Link>
+              </li>
+              <li>
+                <Link to="/register" className="text-white transition-colors duration-300 hover:text-gray-300">
+                  Registrate
+                </Link>
+              </li>
+            </>
           )}
         </ul>
         {auth.isAuthenticated && (

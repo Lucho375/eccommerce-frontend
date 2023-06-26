@@ -88,13 +88,6 @@ function Login() {
             </div>
           </div>
 
-          <span className="mb-3 text-white">
-            No tenes cuenta?
-            <Link to={'/register'} className="px-2 py-2 ml-3 rounded-md hover:text-slate-300 bg-slate-800">
-              registrate
-            </Link>
-          </span>
-
           <Link
             to="/forgot-password"
             className="py-2 mb-3 text-center text-white rounded-md hover:text-slate-300 bg-slate-800"
