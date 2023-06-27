@@ -10,8 +10,6 @@ export default function CartProvider({ children }) {
   const axiosPrivate = useAxiosPrivate()
   const toast = useToast()
 
-  useEffect(() => console.log(cart), [cart])
-
   useEffect(() => {
     const getCart = async () => {
       try {
@@ -19,7 +17,8 @@ export default function CartProvider({ children }) {
         setCart({ id: data.payload.id, products: data.payload.products })
       } catch (error) {
         if (error.response.status === 404) {
-          await axiosPrivate.post(`/carts`, { user: auth.user.id }) // localStorage
+          const { data } = await axiosPrivate.post(`/carts`, { user: auth.user.id }) // localStorage
+          setCart({ id: data.payload._id, products: [] })
         }
       }
     }

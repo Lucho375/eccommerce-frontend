@@ -3,15 +3,10 @@ import { MdDeleteOutline, MdAdd, MdRemove } from 'react-icons/md'
 import useCart from '../../hooks/useCart'
 import useTitle from '../../hooks/useTitle'
 import { Link } from 'react-router-dom'
-import { useEffect } from 'react'
 
 function Cart() {
   const { cart, clearCart, removeFromCart, updateProductQuantity, checkout } = useCart()
   useTitle('Carrito')
-
-  useEffect(() => {
-    console.log(cart)
-  }, [])
 
   return (
     <Box mt={20} p={4} bg="gray.800" color="white" borderRadius="md" className="self-start">

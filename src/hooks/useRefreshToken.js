@@ -1,10 +1,8 @@
 import axios from '../api/axios'
 import useAuth from './useAuth'
-import { useToast } from '@chakra-ui/react'
 
 export default function useRefreshToken() {
   const { setAuth } = useAuth()
-  const toast = useToast()
 
   const refresh = async () => {
     try {
@@ -18,14 +16,6 @@ export default function useRefreshToken() {
       return response.data.payload
     } catch (error) {
       if (error.response.status === 401) {
-        // toast({
-        //   title: 'Sesión expirada',
-        //   description: `Tu sesión expiró`,
-        //   status: 'error',
-        //   duration: 5000,
-        //   isClosable: true,
-        //   position: 'top-right'
-        // })
         setAuth({ isAuthenticated: false })
       }
     }

@@ -13,10 +13,6 @@ export default function AuthProvider({ children }) {
   const location = useLocation()
   const from = location.state?.from?.pathname || '/'
 
-  useEffect(() => {
-    console.log(auth.user)
-  }, [auth])
-
   // Check existing session
   useEffect(() => {
     const getInitialAccessToken = async () => {

@@ -7,8 +7,7 @@ export default function ProductCard({ id, category, description, price, stock, t
   const toast = useToast()
 
   const handleAddToCart = async (id, title) => {
-    const test = await addToCart(id)
-    console.log(test)
+    await addToCart(id)
     toast({
       title: 'Producto agregado al carrito',
       description: `${title} agregado al carrito`,
