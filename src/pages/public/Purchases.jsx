@@ -1,11 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 import useAuth from '../../hooks/useAuth'
-import { Box, Heading, List, ListIcon, ListItem, Text, UnorderedList } from '@chakra-ui/react'
+import { Box, Heading, List, ListIcon, ListItem, Spinner, Text, UnorderedList } from '@chakra-ui/react'
 import { MdCheckCircle } from 'react-icons/md'
 
 function Purchases() {
   const [purchases, setPurchases] = useState([])
+  const [loading, setLoading] = useState(true)
   const { auth } = useAuth()
 
   const axiosPrivate = useAxiosPrivate()
@@ -18,12 +19,16 @@ function Purchases() {
         console.log(data.payload)
       } catch (error) {
         console.error('Error al obtener las compras:', error)
+      } finally {
+        setLoading(false)
       }
     }
     getPurchases()
   }, [])
 
-  if (purchases.length < 1) return <h1 className="text-3xl text-white">Todavia no tenes compras</h1>
+  if (loading) return <Spinner size="xl" color="white" />
+
+  if (!purchases.length) return <h1 className="text-3xl text-white">Todavia no tenes compras</h1>
 
   return (
     <Box mt={5} mb={5} className="self-start">
@@ -32,7 +37,7 @@ function Purchases() {
       </Heading>
       <List spacing={4} color="white">
         {purchases.map(purchase => (
-          <ListItem key={purchase._id} p={4} border="1px" borderColor="gray.300" bg="gray.700" rounded="md">
+          <ListItem key={purchase.id} p={4} border="1px" borderColor="gray.300" bg="gray.700" rounded="md">
             {/* <ListIcon as={MdCheckCircle} color="green.500" /> */}
             <Text>
               <strong>Producto:</strong> {purchase.products[0]._id.title}

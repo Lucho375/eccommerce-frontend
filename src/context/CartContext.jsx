@@ -1,7 +1,9 @@
 import { createContext, useEffect, useState } from 'react'
+import { useToast } from '@chakra-ui/react'
+
 import useAxiosPrivate from '../hooks/useAxiosPrivate'
 import useAuth from '../hooks/useAuth'
-import { useToast } from '@chakra-ui/react'
+
 export const CartContext = createContext()
 
 export default function CartProvider({ children }) {
@@ -17,7 +19,7 @@ export default function CartProvider({ children }) {
         setCart({ id: data.payload.id, products: data.payload.products })
       } catch (error) {
         if (error.response.status === 404) {
-          const { data } = await axiosPrivate.post(`/carts`, { user: auth.user.id }) // localStorage
+          const { data } = await axiosPrivate.post(`/carts`, { user: auth.user.id })
           setCart({ id: data.payload._id, products: [] })
         }
       }
@@ -29,13 +31,11 @@ export default function CartProvider({ children }) {
 
   const addToCart = async id => {
     try {
-      const response = await axiosPrivate.post(`/carts/${cart.id}/products/${id}`)
-      if (response.status === 200) {
-        setCart(prev => ({
-          ...prev,
-          products: response.data.payload.products
-        }))
-      }
+      const { data } = await axiosPrivate.post(`/carts/${cart.id}/products/${id}`)
+      setCart(prev => ({
+        ...prev,
+        products: data.payload.products
+      }))
     } catch (error) {
       console.log(error)
     }
@@ -43,10 +43,10 @@ export default function CartProvider({ children }) {
 
   const removeFromCart = async productId => {
     try {
-      const response = await axiosPrivate.delete(`/carts/${cart.id}/products/${productId}`)
+      const { data } = await axiosPrivate.delete(`/carts/${cart.id}/products/${productId}`)
       setCart(prev => ({
         ...prev,
-        products: response.data.payload.products
+        products: data.payload.products
       }))
     } catch (error) {
       console.log(error)
@@ -55,10 +55,10 @@ export default function CartProvider({ children }) {
 
   const updateProductQuantity = async (productId, newQuantity) => {
     try {
-      const response = await axiosPrivate.put(`/carts/${cart.id}/products/${productId}`, { quantity: newQuantity })
+      const { data } = await axiosPrivate.put(`/carts/${cart.id}/products/${productId}`, { quantity: newQuantity })
       setCart(prev => ({
         ...prev,
-        products: response.data.payload.products
+        products: data.payload.products
       }))
     } catch (error) {
       console.log(error.response.data.message)
@@ -67,17 +67,15 @@ export default function CartProvider({ children }) {
 
   const clearCart = async () => {
     try {
-      const response = await axiosPrivate.delete(`/carts/${cart.id}`)
-      if (response.status === 200) {
-        setCart(prev => ({ ...prev, products: [] }))
-        toast({
-          title: 'Carrito vaciado correctamente',
-          status: 'info',
-          duration: 2000,
-          isClosable: true,
-          position: 'top-right'
-        })
-      }
+      await axiosPrivate.delete(`/carts/${cart.id}`)
+      setCart(prev => ({ ...prev, products: [] }))
+      toast({
+        title: 'Carrito vaciado correctamente',
+        status: 'info',
+        duration: 2000,
+        isClosable: true,
+        position: 'top-right'
+      })
     } catch (error) {
       console.log(error)
     }
@@ -85,19 +83,16 @@ export default function CartProvider({ children }) {
 
   const checkout = async () => {
     try {
-      const response = await axiosPrivate.post(`/carts/${cart.id}/purchase`)
-      console.log(response)
-      if (response.status === 200) {
-        setCart(prev => ({ ...prev, products: [] }))
-        toast({
-          title: 'Carrito comprado',
-          description: 'Estamos enviando tus productos',
-          status: 'success',
-          duration: 3000,
-          isClosable: true,
-          position: 'top-right'
-        })
-      }
+      await axiosPrivate.post(`/carts/${cart.id}/purchase`)
+      setCart(prev => ({ ...prev, products: [] }))
+      toast({
+        title: 'Carrito comprado',
+        description: 'Estamos enviando tus productos',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+        position: 'top-right'
+      })
     } catch (error) {
       if (error.response.status === 400) {
         toast({

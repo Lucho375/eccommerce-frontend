@@ -1,12 +1,30 @@
+import { Link } from 'react-router-dom'
 import { Box, Button, Heading, List, ListItem, IconButton, ButtonGroup } from '@chakra-ui/react'
 import { MdDeleteOutline, MdAdd, MdRemove } from 'react-icons/md'
+
 import useCart from '../../hooks/useCart'
 import useTitle from '../../hooks/useTitle'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import useAxiosPrivate from '../../hooks/useAxiosPrivate'
 
 function Cart() {
   const { cart, clearCart, removeFromCart, updateProductQuantity, checkout } = useCart()
+  const [cart2, setCart2] = useState([])
+  const axiosPrivate = useAxiosPrivate()
   useTitle('Carrito')
+
+  useEffect(() => {
+    const getProductsInCart = async () => {
+      const promises = []
+      for (const product of cart.products) {
+        promises.push(axiosPrivate.get(`/products/${product._id}`))
+      }
+      const PRODUCTS = await Promise.all(promises)
+      // const render = PRODUCTS.map(prod => ({ prod.data.payload }))
+      // console.log(render)
+    }
+    getProductsInCart()
+  }, [])
 
   return (
     <Box mt={20} p={4} bg="gray.800" color="white" borderRadius="md" className="self-start">
