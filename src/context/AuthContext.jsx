@@ -17,11 +17,11 @@ export default function AuthProvider({ children }) {
   useEffect(() => {
     const getInitialAccessToken = async () => {
       try {
-        const response = await axiosPrivate.get('/sessions/refresh-token')
-        const decoded = jwtDecode(response.data.payload)
+        const { data } = await axiosPrivate.get('/sessions/refresh-token')
+        const decoded = jwtDecode(data.payload)
         setAuth({
           user: decoded,
-          accessToken: response.data.payload,
+          accessToken: data.payload,
           isAuthenticated: true,
           isAdmin: decoded.role === 'admin'
         })

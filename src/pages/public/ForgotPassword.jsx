@@ -16,13 +16,14 @@ export default function ForgotPassword() {
   const onSubmit = async email => {
     try {
       const { data } = await axios.post('/sessions/forgot-password', email)
-      if (data.status === 'success') {
+
+      if (data.ok) {
         setEmailSent(true)
-        setTimeout(() => setEmailSent(false), 15000)
+        setTimeout(() => setEmailSent(false), 5000)
       }
     } catch (error) {
       setError(true)
-      setTimeout(() => setError(false), 15000)
+      setTimeout(() => setError(false), 5000)
       console.log(error)
     }
   }
@@ -54,10 +55,10 @@ export default function ForgotPassword() {
         {({ isSubmitting }) => (
           <Form className="flex flex-col justify-around min-h-[200px] w-96 bg-slate-600 p-8 rounded-md shadow-lg shadow-gray-700">
             <div className="flex flex-col mb-4">
-              <label htmlFor="email" className="text-white mb-2">
+              <label htmlFor="email" className="mb-2 text-white">
                 Correo electrónico
               </label>
-              <Field type="text" id="email" name="email" className="bg-slate-300 outline-none rounded-md px-3 py-1" />
+              <Field type="text" id="email" name="email" className="px-3 py-1 rounded-md outline-none bg-slate-300" />
               <div className="min-h-[40px] mt-3">
                 <ErrorMessage name="email" component="span" className="text-red-500" />
               </div>
@@ -66,7 +67,7 @@ export default function ForgotPassword() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-slate-800 text-white rounded-md px-3 py-2 cursor-pointer disabled:cursor-default disabled:opacity-60"
+              className="px-3 py-2 text-white rounded-md cursor-pointer bg-slate-800 disabled:cursor-default disabled:opacity-60"
             >
               Restablecer contraseña
             </button>

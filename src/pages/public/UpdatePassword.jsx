@@ -3,6 +3,7 @@ import { ErrorMessage, Field, Form, Formik } from 'formik'
 import { toFormikValidationSchema } from 'zod-formik-adapter'
 import { updatePasswordSchema } from '../../validations/formSchema'
 import useAuth from '../../hooks/useAuth'
+import { useEffect, useState } from 'react'
 
 const initialValues = {
   password: '',
@@ -11,21 +12,34 @@ const initialValues = {
 
 export default function UpdatePassword() {
   const { resetPassword } = useAuth()
+  const [passwordUpdated, setPasswordUpdated] = useState(false)
+
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search)
   const token = searchParams.get('token')
 
-  // if (!token) return <Navigate to="/" />
+  useEffect(() => {
+    const timeout = setTimeout(() => setPasswordUpdated(false), 3000)
+    return () => clearTimeout(timeout)
+  }, [passwordUpdated])
+
+  if (!token) return <Navigate to="/" />
 
   const onSubmit = async ({ password }) => {
     try {
-      console.log(token)
-      const response = await resetPassword(token, password)
-      console.log(response)
+      const { data } = await resetPassword(token, password)
+      if (data.ok) setPasswordUpdated(true)
     } catch (error) {
       console.log(error)
     }
   }
+
+  if (passwordUpdated)
+    return (
+      <section className="bg-slate-600 min-h-[200px] flex flex-col justify-center px-3 rounded-md">
+        <h1 className="text-white">La contraseña fue cambiada con exito!</h1>
+      </section>
+    )
 
   return (
     <section>
